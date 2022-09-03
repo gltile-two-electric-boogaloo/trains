@@ -33,14 +33,13 @@ pub async fn get_service_details<'a>(client: Client, token: &str, service: &str)
     let res = client.post("https://lite.realtime.nationalrail.co.uk/OpenLDBWS/ldb12.asmx")
         .body(service_details_payload)
         .timeout(Duration::new(5, 0))
-        .header("Content-Type", "application/soap+xml")
+        .header("Content-Type", "text/xml")
+        .header("Accept", "text/xml")
         .send()
         .await
         .context("failed to send request")?;
 
     let result = res.text().await.context("couldn't get response result")?;
-
-    let doc = Document::parse(&result).context("could not parse document")?;
-
-    doc.clone()
+    
+    Document::parse(Box::leak(Box::new(result))).context("couldn't parse document")
 }

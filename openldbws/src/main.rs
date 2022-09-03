@@ -35,26 +35,10 @@ fn main() -> Result<()> {
             let service = sub_matches.get_one::<String>("SERVICE").expect("required");
             let token = sub_matches.get_one::<String>("TOKEN").expect("required");
             println!("Getting information for service {}", service);
+            
+            println!("{:?}", rt.block_on(get_service_details(client, token, service))?);
 
-            return match rt.block_on(get_service_details(client, token, service)) {
-                Ok(doc) => {
-                    println!("{:?}", doc);
-                    Ok(())
-                }
-                Err(e) => {
-                    match e {
-                        Error::Request => {
-                            Err(anyhow!("Can't send the request. Are you connected to the Internet?"))
-                        }
-                        Error::Status => {
-                            Err(anyhow!("Server returned a non-200 response. Is your token correct?"))
-                        }
-                        Error::Parse => {
-                            Err(anyhow!("Can't parse the server response."))
-                        }
-                    }
-                }
-            }
+            Ok(())
         },
         _ => unreachable!()
     }
