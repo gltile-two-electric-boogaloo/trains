@@ -1,9 +1,13 @@
 [package]
-name = "soap"
+name = "openldbws"
 version = "0.1.0"
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-savon = "0.2.0"
+anyhow = "1.0.63"
+clap = "3.2.19"
+openldbws-lib = { path = "../openldbws-lib" }
+reqwest = "0.11.11"
+tokio = "1.20.1"
